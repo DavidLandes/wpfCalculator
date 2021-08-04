@@ -7,8 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="575" d:DesignWidth="400">
     <StackPanel x:Name="StackLayoutRoot" Height="575" Width="400">
-        <TextBlock x:Name="PreviewTextBlock" Height="25" Width="400" HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center" Padding="20" Text="{Binding Path=PreviewValue}" Background="AliceBlue"></TextBlock>
-        <TextBlock x:Name="ValueTextBlock" Height="50" Width="400" HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center" Padding="20" Text="{Binding Path=CurrentValue}" Background="AliceBlue"></TextBlock>
+        <TextBlock x:Name="PreviewTextBlock" Height="25" Width="400" Padding="0,0,20,0" HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center" Text="{Binding Path=PreviewValue}" Background="AliceBlue"></TextBlock>
+        <TextBlock x:Name="ValueTextBlock" Panel.ZIndex="5" Height="45" Width="400" HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0" FontWeight="Bold" FontSize="20" Text="{Binding Path=CurrentValue}" Background="AliceBlue"></TextBlock>
         <Grid x:Name="FunctionsGrid" Height="65">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>

@@ -15,7 +15,7 @@ namespace wpfCalculator.Models
 
         // Declare Buttons.
         public string[] Operators { get; set; }
-        public char[] Values { get; set; }
+        public string[] Values { get; set; }
         public string[] Functions { get; set; }
     }
 }

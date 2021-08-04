@@ -26,7 +26,7 @@ namespace wpfCalculator.ViewModels
             get { return _model.Operators; }
             set { _model.Operators = value; }
         }
-        public char[] Values
+        public string[] Values
         {
             get { return _model.Values; }
             set { _model.Values = value; }
@@ -35,12 +35,7 @@ namespace wpfCalculator.ViewModels
         CalculatorViewModel()
         {
             _model = new CalculatorModel()
-            {
-                CurrentValue = "No Value",
-                Functions = new string[] { },
-                Operators = new string[] { "+", "-", "x", "/", "=" },
-                Values = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.' }
-            };
+            {};
         }
     }
 }

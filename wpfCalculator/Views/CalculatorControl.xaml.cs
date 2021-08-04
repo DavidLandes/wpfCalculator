@@ -66,9 +66,14 @@ namespace wpfCalculator.Views
             InitializeComponent();
             _calculator = new CalculatorModel()
             {
-                Functions = new string[] { "", "", "", "Clr" },
+                Functions = new string[] { "", "x^2", "SqRt", "Clr" },
                 Operators = new string[] { "+", "-", "x", "/", "=" },
-                Values = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.' }
+                Values = new string[] 
+                { 
+                    "7", "8", "9", 
+                    "4", "5", "6", 
+                    "1", "2", "3", 
+                    "0", ".", "" }
             };
             PreviewValue = "";
             DataContext = this;
@@ -86,6 +91,26 @@ namespace wpfCalculator.Views
                     OperandA = 0d;
                     OperandB = 0d;
                     CurrentOperator = "";
+                    PreviewValue = "";
+                }
+                if (CurrentValue != null && CurrentValue != "")
+                {
+                    if (button.Content.Equals("SqRt"))
+                    {
+                        CurrentValue = Math.Sqrt(Double.Parse(CurrentValue)).ToString();
+                        OperandA = 0d;
+                        OperandB = 0d;
+                        CurrentOperator = "";
+                        PreviewValue = $"√{CurrentValue}";
+                    }
+                    if (button.Content.Equals("x^2"))
+                    {
+                        CurrentValue = Math.Pow(Double.Parse(CurrentValue), 2).ToString();
+                        OperandA = 0d;
+                        OperandB = 0d;
+                        CurrentOperator = "";
+                        PreviewValue = $"{CurrentValue}^2";
+                    }
                 }
             }
         }
@@ -93,13 +118,13 @@ namespace wpfCalculator.Views
         public void Operators_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            if (button != null)
+            if (button != null && CurrentValue != null && !CurrentValue.Equals(""))
             {
 
                 if (button.Content.ToString().Equals("="))
                 {
                     // = pressed with no operator
-                    if (CurrentOperator.Equals(""))
+                    if (CurrentOperator == "")
                     {
 
                     }
@@ -107,21 +132,23 @@ namespace wpfCalculator.Views
                     else
                     {
                         OperandB = Double.Parse(CurrentValue);
-                        CurrentValue = PerformOperation(CurrentOperator).ToString();
+                        string result = PerformOperation(CurrentOperator).ToString();
+                        CurrentValue = result != "Invalid" ? result : CurrentValue;
                         OperandA = 0d;
                         OperandB = 0d;
                         CurrentOperator = "";
+                        PreviewValue = result == "Invalid" ? "Invalid" : "";
                     }
                     CurrentOperator = "";
                 }
-
                 // operator pressed
-                if (!button.Content.ToString().Equals("="))
+                else
                 {
                     OperandA = Double.Parse(CurrentValue);
                     CurrentOperator = button.Content.ToString();
-                    CurrentValue = "";
                     PreviewValue = $"{OperandA} {CurrentOperator}";
+                    CurrentValue = "";
+                    
                 }
             }
         }
@@ -132,36 +159,36 @@ namespace wpfCalculator.Views
             if (button != null)
             {
                 // no operator active
-                if (!CurrentOperator.Equals(""))
+                if (CurrentOperator == "")
                 {
-
+                   // CurrentValue = "";
                 }
                 // an operator is active
                 else
                 {
-                  //  CurrentValue = "";
+
                 }
                 CurrentValue += button.Content.ToString();
             }
         }
 
-        public double PerformOperation(string operation)
+        public string PerformOperation(string operation)
         {
             if (operation.Equals("+"))
             {
-                return OperandA + OperandB;
+                return (OperandA + OperandB).ToString();
             }
             else if (operation.Equals("-"))
             {
-                return OperandA - OperandB;
+                return (OperandA - OperandB).ToString();
             }
             else if (operation.Equals("x"))
             {
-                return OperandA * OperandB;
+                return (OperandA * OperandB).ToString();
             }
             else if (operation.Equals("/"))
             {
-                return OperandA / OperandB;
+                return OperandB == 0 ? "Invalid" : (OperandA / OperandB).ToString();
             }
             throw new ArgumentException("The operation provided could not be performed.");
         }
@@ -174,7 +201,9 @@ namespace wpfCalculator.Views
             // Assumes the number of Grid definitions is greater than or equal to the length of the list.
             foreach (string func in _calculator.Functions)
             {
-                Button b = new Button() { Content = func };
+                Button b = new Button() { FontSize = 20, Content = func };
+                if (func == "")
+                    b.IsEnabled = false;
                 b.Click += new RoutedEventHandler(Functions_Click);
                 Grid.SetColumn(b, col);
                 FunctionsGrid.Children.Add(b);
@@ -185,7 +214,9 @@ namespace wpfCalculator.Views
             // Assumes the number of Grid definitions is greater than or equal to the length of the list.
             foreach (string c in _calculator.Operators)
             {
-                Button b = new Button() { Content = c };
+                Button b = new Button() { FontSize = 20, Content = c };
+                if (c == "")
+                    b.IsEnabled = false;
                 b.Click += new RoutedEventHandler(Operators_Click);
                 Grid.SetRow(b, row);
                 OperatorsGrid.Children.Add(b);
@@ -194,9 +225,11 @@ namespace wpfCalculator.Views
 
             row = 0;
             // Assumes the number of Grid definitions is greater than or equal to the length of the list.
-            foreach (char c in _calculator.Values)
+            foreach (string c in _calculator.Values)
             {
-                Button b = new Button() { Content = c };
+                Button b = new Button() { FontSize = 20, Content = c };
+                if (c == "")
+                    b.IsEnabled = false;
                 b.Click += new RoutedEventHandler(Values_Click);
                 Grid.SetColumn(b, col);
                 Grid.SetRow(b, row);
